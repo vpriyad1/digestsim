@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DigestSim - Submission History</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>DigestSim</h1>
+        <nav>
+            <a href="../index.cgi">New analysis</a>
+            <a href="get_history.cgi" class="active">Submission history</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Submission history</h2>
+
+        <section class="metrics">
+            <div class="metric">
+                <p class="metric-label">Total submissions</p>
+                <span class="metric-value">{{total_submissions}}</span>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Specific enzyme</p>
+                <span class="metric-value">{{specific_count}}</span>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Full scans</p>
+                <span class="metric-value">{{full_scan_count}}</span>
+            </div>
+        </section>
+
+        <section class="filter-row">
+            <input type="text" id="search" placeholder="Search by submission name or enzyme...">
+            <select id="mode_filter">
+                <option value="all">All modes</option>
+                <option value="specific">Specific enzyme</option>
+                <option value="full_scan">Full scan</option>
+            </select>
+        </section>
+
+        <section>
+            <table id="history_table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Submission name</th>
+                        <th>Enzyme(s) used</th>
+                        <th>Analysis mode</th>
+                        <th>Cut sites</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{history_rows}}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>DigestSim &middot; Built with REBASE data &middot; 2026</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="../js/history.js"></script>
+</body>
+</html>

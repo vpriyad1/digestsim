@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DigestSim - Results</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>DigestSim</h1>
+        <nav>
+            <a href="../index.cgi">New analysis</a>
+            <a href="get_history.cgi">Submission history</a>
+        </nav>
+    </header>
+
+    <main>
+        <a href="../index.cgi" class="back-link">&larr; Back to input</a>
+        <h2>Results &mdash; {{submission_name}}</h2>
+
+        <section class="metrics">
+            <div class="metric">
+                <p class="metric-label">Enzymes matched</p>
+                <span class="metric-value">{{enzymes_matched}}</span>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Total cut sites</p>
+                <span class="metric-value">{{total_cut_sites}}</span>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Fragments produced</p>
+                <span class="metric-value">{{fragments_produced}}</span>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Sequence length</p>
+                <span class="metric-value">{{sequence_length}} bp</span>
+            </div>
+        </section>
+
+        <section>
+            <h3>Cut site results</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Enzyme</th>
+                        <th>Recognition sequence</th>
+                        <th>Cut position(s)</th>
+                        <th>Overhang type</th>
+                        <th>Fragment sizes (bp)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{results_rows}}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h3>Visual cut map</h3>
+            <div id="cut_map"
+                data-sequence-length="{{sequence_length}}"
+                data-cuts='{{cuts_json}}'
+                data-enzymes='{{enzymes_json}}'>
+            </div>
+            <div id="cut_map_legend"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>DigestSim &middot; Built with REBASE data &middot; 2026</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="../js/results.js"></script>
+</body>
+</html>
