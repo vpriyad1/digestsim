@@ -96,34 +96,39 @@ box to filter by submission name or enzyme, and the dropdown to filter by
 analysis mode. Click "View results" on any row to revisit the full results
 page for that submission.
 
-## Project structure
+## PROJECT STRUCTURE
 
+```
 digestsim/
-├── index.cgi                  # Homepage CGI (renders input form)
+├── index.cgi                    # Homepage CGI (renders input form)
 ├── cgi/
-│   ├── analyze_sequence.cgi   # Processes form, runs analysis, saves submission
-│   ├── get_history.cgi        # Renders submission history page
-│   └── view_submission.cgi    # Renders a specific past submission
-├── templates/                 # HTML templates (no embedded code)
+│   ├── analyze_sequence.cgi     # Processes form, runs analysis, saves submission
+│   ├── get_history.cgi          # Renders submission history page
+│   └── view_submission.cgi      # Renders a specific past submission
+├── templates/                   # HTML templates (no embedded code)
 │   ├── index.html
 │   ├── results.html
 │   └── history.html
-├── css/style.css              # All styling (external)
-├── js/                        # Client-side interactivity (external)
+├── css/
+│   └── style.css                # All page styling (external)
+├── js/                          # Client-side interactivity (external)
 │   ├── main.js
 │   ├── results.js
 │   └── history.js
 ├── lib/
-│   ├── db_connect.py          # MySQL connection helper
-│   ├── db_config.py           # Credentials (gitignored)
-│   └── digest_logic.py        # Core analysis: cleaning, cut detection, fragments
+│   ├── db_config.py             # Database credentials (gitignored)
+│   ├── db_connect.py            # MySQL connection helper
+│   └── digest_logic.py          # Core analysis: cleaning, cut detection, fragments
 ├── sql/
-│   ├── create_tables.sql      # Database schema
-│   └── populate_enzymes.sql   # 718 enzyme INSERT statements (auto-generated)
+│   ├── create_tables.sql        # Database schema
+│   └── populate_enzymes.sql     # 718 enzyme INSERT statements (auto-generated)
 ├── scripts/
-│   └── parse_rebase.py        # Parses REBASE bionet file into SQL
+│   └── parse_rebase.py          # Parses REBASE bionet file into SQL
 ├── data/
-│   └── link_bionet.txt        # Raw REBASE source data
+│   └── link_bionet.txt          # Raw REBASE source data
+├── README.md                    # This file
+└── Final Project Proposal.pdf
+```
 
 ### Database setup (for redeployment)
 
