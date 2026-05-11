@@ -1,0 +1,14 @@
+# Auto-load index.cgi when visiting /digestsim/
+DirectoryIndex index.cgi index.html
+
+# Don't show directory listings
+Options -Indexes
+
+# Allow CGI execution for .cgi files
+Options +ExecCGI
+AddHandler cgi-script .cgi
+
+# Block access to sensitive folders
+<DirectoryMatch "^.*/(lib|sql|scripts|data|templates)$">
+    Require all denied
+</DirectoryMatch>
