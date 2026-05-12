@@ -35,11 +35,15 @@ Storage:
 
 1. **Clone the repository**
 ```bash
+   cd /path/to/your/webroot
    git clone https://github.com/vpriyad1/final-project.git digestsim
    cd digestsim
 ```
 
 2. **Set up the MySQL database**
+
+Create a MySQL database (or use an existing one with full privileges), then run the schema and populate scripts:
+
 ```bash
    mysql -u your_user -p < sql/create_tables.sql
    mysql -u your_user -p < sql/populate_enzymes.sql
@@ -60,7 +64,18 @@ Storage:
    chmod +x index.cgi cgi/*.cgi
 ```
 
-5. **Deploy to your web root** and access via your browser.
+5. **Deploy to your web root** and access via your browser URL (e.g., `http://yourserver/path/to/digestsim/index.cgi`)
+
+### Optional: Refresh enzyme data from REBASE
+
+The repository already includes parsed enzyme data, but if you want to fetch the latest from REBASE:
+
+```bash
+wget http://rebase.neb.com/rebase/link_bionet -O data/link_bionet.txt
+python3 scripts/parse_rebase.py data/link_bionet.txt sql/populate_enzymes.sql
+```
+
+Then re-run step 2 above to reload the data.
 
 ## DETAILED USAGE
 
@@ -129,23 +144,6 @@ digestsim/
 ├── README.md                    # This file
 └── Final Project Proposal.pdf
 ```
-
-### Database setup (for redeployment)
-
-To set up DigestSim from scratch:
-
-1. Create a MySQL database (or use an existing one with full privileges).
-2. Run `sql/create_tables.sql` to create the `enzyme_db` and `submissions`
-   tables.
-3. (Optional, only needed for fresh enzyme data.)
-   Download the latest REBASE bionet file:
-       wget http://rebase.neb.com/rebase/link_bionet -O data/link_bionet.txt
-   Then regenerate the populate SQL:
-       python3 scripts/parse_rebase.py data/link_bionet.txt sql/populate_enzymes.sql
-4. Run `sql/populate_enzymes.sql` to load enzyme data.
-5. Create `lib/db_config.py` with your database credentials.
-6. Make CGI scripts executable: `chmod +x index.cgi cgi/*.cgi`
-7. Place files in your document root.
 
 ## REFERENCES
 
