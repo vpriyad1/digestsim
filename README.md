@@ -3,19 +3,21 @@
 > A web-based tool for restriction enzyme analysis and DNA digest simulation.
 
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-3.0-000000?logo=flask&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-5.7+-4479A1?logo=mysql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 ![jQuery](https://img.shields.io/badge/jQuery-3.7-0769AD?logo=jquery&logoColor=white)
-![Apache](https://img.shields.io/badge/Apache-CGI-D22128?logo=apache&logoColor=white)
 
 ![DigestSim homepage](docs/screenshots/01_homepage.png)
 
 DigestSim lets molecular biologists plan and validate restriction enzyme digestion experiments entirely in silico. Paste any DNA sequence, choose specific enzymes (or scan all 718 in the database), and instantly see cut positions, fragment sizes, overhang types, and a visual cut map — saving time and reducing wet-lab errors before a single tube is touched.
 
-**[Features](#features) • [Tech stack](#tech-stack) • [Screenshots](#screenshots) • [Try it yourself](#try-it-yourself) • [Installation](#installation) • [References](#references)**
+**[Features](#features) • [Tech stack](#tech-stack) • [Three ways to run it](#three-ways-to-run-it) • [Screenshots](#screenshots) • [Try it yourself](#try-it-yourself) • [References](#references)**
 
-> **🚀 Live demo:** currently being redeployed on public hosting. For now, see the screenshots below or clone and run locally using the installation instructions.
+> **🚀 Live demo:** **[ved2213.pythonanywhere.com](https://ved2213.pythonanywhere.com)** — try the app right now, no install needed.
 
 ---
 
@@ -30,16 +32,28 @@ DigestSim lets molecular biologists plan and validate restriction enzyme digesti
 
 ## Tech stack
 
-**Backend:** Python 3 CGI programming, MySQL relational database, `mysql-connector-python`, Apache HTTP server with mod_cgi
+**Backend:** Python 3, Flask (portfolio version) or CGI (academic version), SQLite / MySQL, Apache with mod_cgi (academic version)
 
 **Frontend:** HTML5 semantic markup, CSS3 (no frameworks — handwritten), JavaScript + jQuery 3.7 for client-side interactivity
 
 **Data:** [REBASE](http://rebase.neb.com) — The Restriction Enzyme Database (Roberts et al., 2015)
 
+**Deployment:** PythonAnywhere (live demo), Docker (containerized)
+
 **Principles:**
 - Strict content separation (no HTML in Python, no inline CSS/JS in HTML)
-- Templating-based rendering (HTML templates with placeholders)
-- Two-table normalized relational schema
+- Templating-based rendering (Jinja2 for Flask, placeholder substitution for CGI)
+- Normalized two-table relational schema
+
+## Three ways to run it
+
+| Method | Best for | How |
+|---|---|---|
+| 🌐 **Live demo** | Just trying it out | Visit [ved2213.pythonanywhere.com](https://ved2213.pythonanywhere.com) |
+| 🐳 **Docker** | Quick local setup | `cd flask_app && docker compose up` — then open http://localhost:5000 |
+| 🐍 **Python + Flask** | Developers who want to tinker | `cd flask_app && pip install -r requirements.txt && python app.py` |
+
+The repo also contains the **original CGI + MySQL version** (project root) from the Johns Hopkins class submission.
 
 ## Screenshots
 
@@ -54,7 +68,7 @@ DigestSim lets molecular biologists plan and validate restriction enzyme digesti
 
 ## Try it yourself
 
-Once installed, test the app with these sample inputs:
+On the live demo (or any local instance), try these sample inputs:
 
 ### 1. Simple EcoRI digest
 
@@ -92,35 +106,48 @@ Once installed, test the app with these sample inputs:
 
 ## Installation
 
-### Requirements
+### Flask + SQLite (recommended)
 
-- Python 3.8+
-- MySQL 5.7+ or MariaDB
-- Apache (or any web server with CGI support)
-- Python module: `mysql-connector-python`
-
-### Steps
-
-**1. Clone the repository into your web root**
+Zero database setup — SQLite is a single file that's created automatically.
 
 ```bash
-cd /path/to/your/webroot
+git clone https://github.com/vpriyad1/digestsim.git
+cd digestsim/flask_app
+pip install -r requirements.txt
+python app.py
+```
+
+Then open http://localhost:5000 in your browser. Done.
+
+### Docker
+
+```bash
+git clone https://github.com/vpriyad1/digestsim.git
+cd digestsim/flask_app
+docker compose up
+```
+
+Then open http://localhost:5000 in your browser.
+
+### Original CGI + MySQL (academic version)
+
+The class-submission version in the project root uses Apache CGI and MySQL. Setup steps:
+
+**1. Clone and enter the project root**
+
+```bash
 git clone https://github.com/vpriyad1/digestsim.git
 cd digestsim
 ```
 
 **2. Set up the MySQL database**
 
-Create a MySQL database (or use an existing one with full privileges), then load the schema and data:
-
 ```bash
 mysql -u your_user -p your_database < sql/create_tables.sql
 mysql -u your_user -p your_database < sql/populate_enzymes.sql
 ```
 
-This creates the `enzyme_db` and `submissions` tables and loads 718 Type II restriction enzymes.
-
-**3. Create your database config** in `lib/db_config.py` (this file is gitignored for security):
+**3. Create your database config** in `lib/db_config.py` (gitignored):
 
 ```python
 DB_HOST = 'localhost'
@@ -135,9 +162,7 @@ DB_NAME = 'your_database'
 chmod +x index.cgi cgi/*.cgi
 ```
 
-**5. Access in your browser**
-
-Navigate to your deployment URL (e.g., `http://yourserver/path/to/digestsim/index.cgi`). The homepage should load with the input form and enzyme dropdowns populated.
+**5. Deploy to your Apache web root** and access via browser.
 
 ### Optional: Refresh enzyme data from REBASE
 
@@ -146,38 +171,39 @@ wget http://rebase.neb.com/rebase/link_bionet -O data/link_bionet.txt
 python3 scripts/parse_rebase.py data/link_bionet.txt sql/populate_enzymes.sql
 ```
 
-Then re-run step 2 to reload the data.
-
 ## Project structure
 
 ```
 digestsim/
-├── index.cgi                    # Homepage CGI (renders input form)
-├── cgi/
-│   ├── analyze_sequence.cgi     # Processes form, runs analysis, saves submission
-│   ├── get_history.cgi          # Renders submission history page
-│   └── view_submission.cgi      # Renders a specific past submission
-├── templates/                   # HTML templates (no embedded code)
-│   ├── index.html
-│   ├── results.html
-│   └── history.html
-├── css/
-│   └── style.css                # All page styling (external)
-├── js/                          # Client-side interactivity (external)
-│   ├── main.js
-│   ├── results.js
-│   └── history.js
+├── flask_app/                   # Portfolio version: Flask + SQLite + Docker
+│   ├── app.py                   # Flask application (all routes + analysis logic)
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   ├── templates/               # Jinja2 templates
+│   ├── static/css/              # External stylesheet
+│   ├── static/js/               # External JavaScript (main, results, history)
+│   └── data/                    # Schema + seed data
+│
+├── index.cgi                    # Academic version: Homepage CGI
+├── cgi/                         # Academic version: CGI scripts
+│   ├── analyze_sequence.cgi
+│   ├── get_history.cgi
+│   └── view_submission.cgi
+├── templates/                   # Academic version: HTML templates
+├── css/style.css
+├── js/                          # Client-side interactivity
 ├── lib/
-│   ├── db_config.py             # Database credentials (gitignored)
+│   ├── db_config.py             # DB credentials (gitignored)
 │   ├── db_connect.py            # MySQL connection helper
-│   └── digest_logic.py          # Core analysis: cleaning, cut detection, fragments
+│   └── digest_logic.py          # Core analysis
 ├── sql/
-│   ├── create_tables.sql        # Database schema
-│   └── populate_enzymes.sql     # 718 enzyme INSERT statements (auto-generated)
+│   ├── create_tables.sql        # MySQL schema
+│   └── populate_enzymes.sql     # 718 enzyme INSERTs (auto-generated)
 ├── scripts/
-│   └── parse_rebase.py          # Parses REBASE bionet file into SQL
+│   └── parse_rebase.py          # REBASE bionet parser
 ├── data/
-│   └── link_bionet.txt          # Raw REBASE source data
+│   └── link_bionet.txt          # REBASE source data
 ├── docs/
 │   └── screenshots/             # README images
 ├── README.md
@@ -202,7 +228,7 @@ Two tables:
 
 ## Acknowledgments
 
-Built as the final project for **AS.410.712.81 — Advanced Practical Computer Concepts for Bioinformatics** at **Johns Hopkins University**, Spring 2026.
+Originally built as the final project for **AS.410.712.81 — Advanced Practical Computer Concepts for Bioinformatics** at **Johns Hopkins University**, Spring 2026. Refactored to Flask + SQLite + Docker for portfolio deployment.
 
 ## Author
 
