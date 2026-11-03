@@ -17,7 +17,11 @@ DigestSim lets molecular biologists plan and validate restriction enzyme digesti
 
 **[Features](#features) • [Tech stack](#tech-stack) • [Three ways to run it](#three-ways-to-run-it) • [Screenshots](#screenshots) • [Try it yourself](#try-it-yourself) • [References](#references)**
 
-> **🚀 Live demo:** **[ved2213.pythonanywhere.com](https://ved2213.pythonanywhere.com)** — try the app right now, no install needed.
+> **🚀 Live demo:** **[digestsim.onrender.com](https://digestsim.onrender.com)** — try the app right now, no install needed.
+>
+> *First visit after inactivity may take ~50 seconds to wake up (free-tier cold start). Once awake, it's instant.*
+>
+> **Mirror:** **[ved2213.pythonanywhere.com](https://ved2213.pythonanywhere.com)** — backup deployment on PythonAnywhere.
 
 ---
 
@@ -32,13 +36,13 @@ DigestSim lets molecular biologists plan and validate restriction enzyme digesti
 
 ## Tech stack
 
-**Backend:** Python 3, Flask (portfolio version) or CGI (academic version), SQLite / MySQL, Apache with mod_cgi (academic version)
+**Backend:** Python 3, Flask (portfolio version) or CGI (academic version), SQLite / MySQL, Apache with mod_cgi (academic version), Gunicorn (production WSGI)
 
 **Frontend:** HTML5 semantic markup, CSS3 (no frameworks — handwritten), JavaScript + jQuery 3.7 for client-side interactivity
 
 **Data:** [REBASE](http://rebase.neb.com) — The Restriction Enzyme Database (Roberts et al., 2015)
 
-**Deployment:** PythonAnywhere (live demo), Docker (containerized)
+**Deployment:** Render (primary live demo), PythonAnywhere (mirror), Docker (containerized)
 
 **Principles:**
 - Strict content separation (no HTML in Python, no inline CSS/JS in HTML)
@@ -49,7 +53,7 @@ DigestSim lets molecular biologists plan and validate restriction enzyme digesti
 
 | Method | Best for | How |
 |---|---|---|
-| 🌐 **Live demo** | Just trying it out | Visit [ved2213.pythonanywhere.com](https://ved2213.pythonanywhere.com) |
+| 🌐 **Live demo** | Just trying it out | Visit [digestsim.onrender.com](https://digestsim.onrender.com) or [ved2213.pythonanywhere.com](https://ved2213.pythonanywhere.com) |
 | 🐳 **Docker** | Quick local setup | `cd flask_app && docker compose up` — then open http://localhost:5000 |
 | 🐍 **Python + Flask** | Developers who want to tinker | `cd flask_app && pip install -r requirements.txt && python app.py` |
 
@@ -206,6 +210,7 @@ digestsim/
 │   └── link_bionet.txt          # REBASE source data
 ├── docs/
 │   └── screenshots/             # README images
+├── render.yaml                  # Render.com deployment config
 ├── README.md
 └── Final Project Proposal.pdf
 ```
