@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DigestSim - Restriction Enzyme Analysis Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>DigestSim</h1>
+        <p class="tagline">A web-based tool for restriction enzyme analysis and DNA digest simulation</p>
+        <nav>
+            <a href="{{ url_for('index') }}" class="active">New analysis</a>
+            <a href="{{ url_for('history') }}">Submission history</a>
+        </nav>
+    </header>
+
+    <main>
+        <form action="{{ url_for('analyze') }}" method="POST" id="analysis_form">
+            <section>
+                <label for="submission_name">Submission name (optional)</label>
+                <input type="text" id="submission_name" name="submission_name" placeholder="e.g. My cloning experiment">
+            </section>
+
+            <section>
+                <label for="dna_sequence">Paste DNA sequence</label>
+                <textarea id="dna_sequence" name="dna_sequence" rows="8" required
+                    placeholder="ATGCTTAAGCTTGGATCCGAATTCGTACGCTAGCTAGCTAGCGAATTCATGCTT..."></textarea>
+            </section>
+
+            <section>
+                <fieldset>
+                    <legend>Analysis mode</legend>
+                    <label>
+                        <input type="radio" name="analysis_mode" value="specific" checked>
+                        Select specific enzymes
+                    </label>
+                    <label>
+                        <input type="radio" name="analysis_mode" value="full_scan">
+                        Scan all enzymes in database
+                    </label>
+                </fieldset>
+            </section>
+
+            <section id="enzyme_selectors">
+                <label for="enzyme1">Enzyme 1</label>
+                <select id="enzyme1" name="enzyme1">
+                    <option value="">-- Select an enzyme --</option>
+                    {% for enz in enzymes %}
+                        <option value="{{ enz.enzyme_id }}">{{ enz.enzyme_name }} ({{ enz.recognition_sequence }})</option>
+                    {% endfor %}
+                </select>
+
+                <label for="enzyme2">Enzyme 2 (optional, for double digest)</label>
+                <select id="enzyme2" name="enzyme2">
+                    <option value="">-- None --</option>
+                    {% for enz in enzymes %}
+                        <option value="{{ enz.enzyme_id }}">{{ enz.enzyme_name }} ({{ enz.recognition_sequence }})</option>
+                    {% endfor %}
+                </select>
+            </section>
+
+            <button type="submit">Analyze sequence</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>DigestSim &middot; Built with REBASE data &middot; Vedangi Priyadarshini &middot; 2026</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

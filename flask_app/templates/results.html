@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DigestSim - Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>DigestSim</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">New analysis</a>
+            <a href="{{ url_for('history') }}">Submission history</a>
+        </nav>
+    </header>
+
+    <main>
+        <a href="{{ url_for('index') }}" class="back-link">&larr; Back to input</a>
+        <h2>Results &mdash; {{ submission.submission_name }}</h2>
+
+        <section class="metrics">
+            <div class="metric">
+                <p class="metric-label">Enzymes matched</p>
+                <span class="metric-value">{{ result.per_enzyme|length }}</span>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Total cut sites</p>
+                <span class="metric-value">{{ result.all_cuts|length }}</span>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Fragments produced</p>
+                <span class="metric-value">{{ result.fragments|length }}</span>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Sequence length</p>
+                <span class="metric-value">{{ result.sequence_length }} bp</span>
+            </div>
+        </section>
+
+        <section>
+            <h3>Cut site results</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Enzyme</th>
+                        <th>Recognition sequence</th>
+                        <th>Cut position(s)</th>
+                        <th>Overhang type</th>
+                        <th>Fragment sizes (bp)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if result.per_enzyme %}
+                        {% for e in result.per_enzyme %}
+                            <tr>
+                                <td>{{ e.enzyme_name }}</td>
+                                <td>{{ e.recognition_sequence[:e.cut_position] }}^{{ e.recognition_sequence[e.cut_position:] }}</td>
+                                <td>{{ e.cut_sites|join(', ') }}</td>
+                                <td>
+                                    {% if e.overhang_type == '5_prime_sticky' %}
+                                        <span class="badge badge-sticky-5">5' sticky</span>
+                                    {% elif e.overhang_type == '3_prime_sticky' %}
+                                        <span class="badge badge-sticky-3">3' sticky</span>
+                                    {% else %}
+                                        <span class="badge badge-blunt">blunt</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ e.fragments|join(', ') }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align:center; color:#888; padding:20px;">
+                                No cut sites found for the selected enzymes.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h3>Visual cut map</h3>
+            <div id="cut_map"
+                data-sequence-length="{{ result.sequence_length }}"
+                data-enzymes='{{ enzymes_json|safe }}'>
+            </div>
+            <div id="cut_map_legend"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>DigestSim &middot; Built with REBASE data &middot; 2026</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/results.js') }}"></script>
+</body>
+</html>
